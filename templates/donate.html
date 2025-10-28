@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}التبرع بالدم{% endblock %}
+
+{% block header_title %} التبرع بالدم {% endblock %}
+{% block header_subtitle %}قطرة منك حياة لغيرك{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+    }
+    .header {
+        background: rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- <div class="benefits">
+    <h3>🎁 فوائد التبرع بالدم</h3>
+    <ul>
+        <li>إنقاذ حياة ثلاثة أشخاص بتبرع واحد</li>
+        <li>فحص مجاني شامل للدم</li>
+        <li>تجديد خلايا الدم وتحسين الصحة</li>
+        <li>حرق السعرات الحرارية</li>
+        <li>أجر وثواب عظيم</li>
+    </ul>
+</div> -->
+
+<div class="form-card">
+    <h2 class="form-title">استمارة التبرع بالدم</h2>
+    <p class="form-subtitle">املأ النموذج للتسجيل كمتبرع</p>
+
+    <form method="POST" action="{{ url_for('donate') }}">
+        <div class="form-group">
+            <label for="name">الاسم الكامل *</label>
+            <input type="text" id="name" name="name" required placeholder="أدخل اسمك الكامل">
+        </div>
+
+        <div class="form-group">
+            <label for="phone">رقم الهاتف *</label>
+            <input type="tel" id="phone" name="phone" required placeholder="مثال: 0551234567">
+        </div>
+
+        <div class="form-group">
+            <label for="blood_type">زمرة الدم (فصيلة الدم) *</label>
+            <select id="blood_type" name="blood_type" required>
+                <option value="">اختر زمرة الدم</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+        </div>
+
+        <button type="submit" class="submit-btn">تسجيل التبرع </button>
+    </form>
+</div>
+{% endblock %}

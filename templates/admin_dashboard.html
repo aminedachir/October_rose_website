@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - إدارة المتبرعين</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added same font */
+        }
+
+        .admin-header {
+            background: rgba(0,0,0,0.3);
+            padding: 30px 20px;
+            color: white;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added same font */
+        }
+
+        .admin-nav {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added same font */
+        }
+
+        .admin-nav-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .admin-info {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff4757 0%, #c44569 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added same font */
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card-admin {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added same font */
+        }
+
+        .stat-card-admin:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card-admin .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-admin .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card-admin .label {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Added same font */
+        }
+
+        .edit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <h1> لوحة التحكم - إدارة المتبرعين</h1>
+        <p>مرحباً بك في نظام إدارة المتبرعين بالدم</p>
+    </div>
+
+    <div class="admin-nav">
+        <div class="admin-nav-left">
+            <span class="admin-info">👤 مرحباً {{ session.admin_username }}</span>
+            <a href="{{ url_for('home') }}" class="edit-btn"> الصفحة الرئيسية</a>
+        </div>
+        <a href="{{ url_for('admin_logout') }}" class="logout-btn">تسجيل الخروج </a>
+    </div>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="dashboard-stats">
+            <div class="stat-card-admin">
+                <div class="icon"></div>
+                <div class="number">{{ total_donors }}</div>
+                <div class="label">إجمالي المتبرعين</div>
+            </div>
+            <div class="stat-card-admin">
+                <div class="icon"></div>
+                <div class="number">{{ total_donors * 3 }}</div>
+                <div class="label">أرواح تم إنقاذها</div>
+            </div>
+            <div class="stat-card-admin">
+                <div class="icon"></div>
+                <div class="number">{{ blood_types_count if blood_types_count is defined else 0 }}</div>
+                <div class="label">أنواع فصائل الدم</div>
+            </div>
+        </div>
+
+        <div class="donors-card">
+            <h2 class="card-title"> قائمة المتبرعين</h2>
+
+            {% if donors %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الاسم</th>
+                        <th>رقم الهاتف</th>
+                        <th>زمرة الدم</th>
+                        <th>تاريخ التسجيل</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for donor in donors %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ donor.name }}</td>
+                        <td>{{ donor.phone }}</td>
+                        <td><span class="blood-badge">{{ donor.blood_type }}</span></td>
+                        <td>{{ donor.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <form method="POST" action="{{ url_for('admin_delete_donor', donor_id=donor.id) }}" 
+                                      onsubmit="return confirm('هل أنت متأكد من حذف المتبرع {{ donor.name }}؟');" 
+                                      style="display: inline;">
+                                    <button type="submit" class="delete-btn">🗑️ حذف</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon"></div>
+                <div class="empty-state-text">لا يوجد متبرعون بعد</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <p style="font-size: 1.2em; margin-bottom: 10px;"> لوحة التحكم - أكتوبر الوردي</p>
+        <p>نظام إدارة المتبرعين بالدم | 2025</p>
+    </footer>
+</body>
+</html>

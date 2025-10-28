@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}قائمة المتبرعين{% endblock %}
+
+{% block header_title %}المتبرعون {% endblock %}
+{% block header_subtitle %}أبطال إنقاذ الأرواح{% endblock %}
+
+{% block content %}
+<div class="stats">
+    <div class="stat-box">
+        <div class="number">{{ donors|length }}</div>
+        <div class="label">إجمالي المتبرعين</div>
+    </div>
+    <div class="stat-box">
+        <div class="number">{{ donors|length * 3 }}</div>
+        <div class="label">أرواح تم إنقاذها</div>
+    </div>
+    <div class="stat-box">
+        <div class="number">{{ blood_types_count|length }}</div>
+        <div class="label">أنواع فصائل الدم</div>
+    </div>
+</div>
+
+<!-- <div class="donors-card">
+    <h2 class="card-title"> سجل المتبرعين</h2>
+
+    {% if donors %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>الاسم</th>
+                <th>رقم الهاتف</th>
+                <th>زمرة الدم</th>
+                <th>تاريخ التسجيل</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for donor in donors %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ donor.name }}</td>
+                <td>{{ donor.phone }}</td>
+                <td><span class="blood-badge">{{ donor.blood_type }}</span></td>
+                <td>{{ donor.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon"></div>
+        <div class="empty-state-text">لا يوجد متبرعون بعد</div>
+        <p style="margin-top: 20px; font-size: 1.2em;">كن أول من يتبرع!</p>
+    </div>
+    {% endif %}
+</div> -->
+{% endblock %}

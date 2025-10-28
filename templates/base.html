@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}أكتوبر الوردي | التبرع بالدم{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo left-logo">
+            <div class="header-text">
+                <h1>{% block header_title %}🎀 أكتوبر الوردي 🎀{% endblock %}</h1>
+                <p class="subtitle">{% block header_subtitle %}معاً ضد سرطان الثدي | معاً من أجل الحياة{% endblock %}</p>
+            </div>
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo right-logo">
+        </div>
+    </div>
+
+    <nav>
+        <a href="{{ url_for('home') }}" {% if request.endpoint == 'home' %}class="active"{% endif %}>الرئيسية</a>
+        <a href="{{ url_for('donate') }}" {% if request.endpoint == 'donate' %}class="active"{% endif %}>التبرع بالدم</a>
+        <a href="{{ url_for('donors_list') }}" {% if request.endpoint == 'donors_list' %}class="active"{% endif %}>قائمة المتبرعين</a>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p style="font-size: 1.2em; margin-bottom: 10px;"> معاً من أجل حياة أفضل وأكثر صحة </p>
+        <p>أكتوبر الوردي | التبرع بالدم | 2025</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
